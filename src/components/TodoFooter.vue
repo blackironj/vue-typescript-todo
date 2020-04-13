@@ -10,13 +10,7 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class TodoFooter extends Vue {
   private clearTodo(): void {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-
-      if (key !== null && key.includes("todo:")) {
-        localStorage.removeItem(key);
-      }
-    }
+    this.$emit("removeAll");
   }
 }
 </script>

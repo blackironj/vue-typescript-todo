@@ -22,10 +22,9 @@ export default class TodoInput extends Vue {
   private addTodo(): void {
     if (this.newTodoItem !== "") {
       const value = this.newTodoItem && this.newTodoItem.trim();
-      const key = "todo:" + value;
-      localStorage.setItem(key, value);
+      this.$emit("addTodo", value);
+      this.clearInput();
     }
-    this.clearInput();
   }
 
   private clearInput(): void {

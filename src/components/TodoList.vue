@@ -1,7 +1,7 @@
 <template>
   <section>
     <ul>
-      <li v-for="(todoItem, index) in todoItems" :key="todoItem" class="shadow">
+      <li v-for="(todoItem, index) in propsdata" :key="todoItem" class="shadow">
         <i class="checkBtn fas fa-check" aria-hidden="true"></i>
         {{ todoItem }}
         <span
@@ -17,32 +17,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Prop, Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class TodoList extends Vue {
-  private todoItems: string[] = [];
-
-  private getTodoItems(): void {
-    if (localStorage.length > 0) {
-      for (let i = 0; i < localStorage.length; i++) {
-        const val = localStorage.key(i);
-
-        if (val !== null && val.includes("todo:")) {
-          const splitted = val.split(":", 2);
-          this.todoItems.push(splitted[1]);
-        }
-      }
-    }
-  }
+  @Prop() private propsdata!: Array<string>;
 
   private removeTodo(todoItem: string, index: number): void {
-    localStorage.removeItem("todo:" + todoItem);
-    this.todoItems.splice(index, 1);
-  }
-
-  created() {
-    this.getTodoItems();
+    this.$emit("removeTodo", todoItem, index);
   }
 }
 </script>
