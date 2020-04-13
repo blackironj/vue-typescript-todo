@@ -19,7 +19,7 @@ import { Component, Vue } from "vue-property-decorator";
 export default class TodoInput extends Vue {
   private newTodoItem = "";
 
-  public addTodo(): void {
+  private addTodo(): void {
     if (this.newTodoItem !== "") {
       const value = this.newTodoItem && this.newTodoItem.trim();
       const key = "todo:" + value;

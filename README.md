@@ -1,4 +1,4 @@
-# test-vue
+# vue-typescript-todo
 
 ## Project setup
 ```

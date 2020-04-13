@@ -36,7 +36,7 @@ export default class TodoList extends Vue {
     }
   }
 
-  public removeTodo(todoItem: string, index: number):void {
+  private removeTodo(todoItem: string, index: number): void {
     localStorage.removeItem("todo:" + todoItem);
     this.todoItems.splice(index, 1);
   }
