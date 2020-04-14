@@ -9,21 +9,37 @@
     <span class="addContainer" v-on:click="addTodo">
       <i class="addBtn fas fa-plus" aria-hidden="true"></i>
     </span>
+
+    <modal v-if="showModal" @close="showModal = false">
+      <h3 slot="header">Warning</h3>
+      <span slot="footer" @click="showModal = false">
+        Write somthing to do
+        <i class="closeModalBtn fas fa-times" aria-hidden="true"></i>
+      </span>
+    </modal>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import Modal from "@/common/Modal.vue";
 
-@Component
+@Component({
+  components: {
+    Modal: Modal
+  }
+})
 export default class TodoInput extends Vue {
   private newTodoItem = "";
+  private showModal = false;
 
   private addTodo(): void {
     if (this.newTodoItem !== "") {
       const value = this.newTodoItem && this.newTodoItem.trim();
       this.$emit("addTodo", value);
       this.clearInput();
+    } else {
+      this.showModal = !this.showModal;
     }
   }
 
