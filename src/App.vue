@@ -2,17 +2,18 @@
   <div id="app">
     <TodoHeader></TodoHeader>
     <TodoInput v-on:addTodo="addTodo"></TodoInput>
-    <TodoList v-bind:propsdata="todoItems" @removeTodo="removeTodo"></TodoList>
-    <TodoFooter v-on:removeAll="clearAll"></TodoFooter>
+    <TodoList v-bind:propsTodos="todos" @removeTodo="removeTodo"></TodoList>
+    <TodoFooter v-on:clearAll="clearAll"></TodoFooter>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import TodoHeader from "./components/TodoHeader.vue";
 import TodoInput from "./components/TodoInput.vue";
 import TodoList from "./components/TodoList.vue";
 import TodoFooter from "./components/TodoFooter.vue";
+import TodoStorage, { TodoStatus, TodoStruct } from "./todo";
 
 @Component({
   components: {
@@ -23,28 +24,45 @@ import TodoFooter from "./components/TodoFooter.vue";
   }
 })
 export default class App extends Vue {
-  private todoItems: Array<string> = [];
+  private todos: Array<TodoStruct> = [];
 
-  private addTodo(todoItem: string): void {
-    const key = "todo:" + todoItem;
-    localStorage.setItem(key, todoItem);
-    this.todoItems.push(todoItem);
+  private todoStorage = new TodoStorage();
+
+  private addTodo(text: string): void {
+    const todo = {} as TodoStruct;
+    todo.status = TodoStatus.INCOMPLETE;
+    todo.text = text;
+
+    this.todos.push(todo);
+  }
+
+  private removeTodo(index: number): void {
+    this.todos.splice(index, 1);
   }
 
   private clearAll(): void {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-
-      if (key !== null && key.includes("todo:")) {
-        localStorage.removeItem(key);
-      }
-    }
-    this.todoItems = [];
+    this.todos = [];
   }
 
-  private removeTodo(todoItem: string, index: number): void {
-    localStorage.removeItem("todo:" + todoItem);
-    this.todoItems.splice(index, 1);
+  private get(s: TodoStatus): Array<TodoStruct> {
+    switch (s) {
+      case TodoStatus.COMPLETE:
+        return this.todos.filter(t => t.status === TodoStatus.COMPLETE);
+      case TodoStatus.INCOMPLETE:
+        return this.todos.filter(t => t.status === TodoStatus.INCOMPLETE);
+      default:
+        return this.todos;
+    }
+  }
+  //created
+  created() {
+    this.todos = this.todoStorage.fetch();
+  }
+
+  //watcher
+  @Watch("todos")
+  todolistChanged(todos: Array<TodoStruct>) {
+    this.todoStorage.save(todos);
   }
 }
 </script>

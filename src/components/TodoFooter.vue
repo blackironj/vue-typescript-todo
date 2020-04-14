@@ -1,6 +1,6 @@
 <template>
   <div class="clearAllContainer">
-    <span class="clearAllBtn" @click="clearTodo">Clear All</span>
+    <span class="clearAllBtn" @click="clearAll">Clear All</span>
   </div>
 </template>
 
@@ -9,8 +9,8 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class TodoFooter extends Vue {
-  private clearTodo(): void {
-    this.$emit("removeAll");
+  private clearAll(): void {
+    this.$emit("clearAll");
   }
 }
 </script>

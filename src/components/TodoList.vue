@@ -1,14 +1,10 @@
 <template>
   <section>
     <transition-group name="list" tag="ul">
-      <li v-for="(todoItem, index) in propsdata" :key="todoItem" class="shadow">
+      <li v-for="(todoItem, index) in propsTodos" :key="index" class="shadow">
         <i class="checkBtn fas fa-check" aria-hidden="true"></i>
-        {{ todoItem }}
-        <span
-          class="removeBtn"
-          type="button"
-          @click="removeTodo(todoItem, index)"
-        >
+        {{ todoItem.text }}
+        <span class="removeBtn" type="button" @click="removeTodo(index)">
           <i class="far fa-trash-alt" aria-hidden="true"></i>
         </span>
       </li>
@@ -18,13 +14,14 @@
 
 <script lang="ts">
 import { Prop, Component, Vue } from "vue-property-decorator";
+import { TodoStruct } from "../todo";
 
 @Component
 export default class TodoList extends Vue {
-  @Prop() private propsdata!: Array<string>;
+  @Prop() private propsTodos!: Array<TodoStruct>;
 
-  private removeTodo(todoItem: string, index: number): void {
-    this.$emit("removeTodo", todoItem, index);
+  private removeTodo(index: number): void {
+    this.$emit("removeTodo", index);
   }
 }
 </script>
