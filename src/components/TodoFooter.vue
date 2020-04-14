@@ -1,32 +1,50 @@
+<!-- TodoStatus 
+    0 : COMPLETE
+    1 : INCOMPLETE
+    2 : DEFAULT
+-->
 <template>
-  <div class="clearAllContainer">
-    <span class="clearAllBtn" @click="clearAll">Clear All</span>
+  <div class="filters">
+    <button
+      class="btn filters__btn filters__btn--all"
+      v-on:click="filterTodos(2)"
+    >
+      All
+    </button>
+    <button
+      class="btn filters__btn filters__btn--complete"
+      v-on:click="filterTodos(0)"
+    >
+      Complete
+    </button>
+    <button
+      class="btn filters__btn filters__btn--incomplete"
+      v-on:click="filterTodos(1)"
+    >
+      Incomplete
+    </button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { TodoStatus } from "../todo";
 
 @Component
 export default class TodoFooter extends Vue {
-  private clearAll(): void {
-    this.$emit("clearAll");
+  private filterTodos(status: TodoStatus): void {
+    this.$emit("filterTodos", status);
   }
 }
 </script>
 
-<style scoped>
-.clearAllContainer {
-  width: 8.5rem;
-  height: 50px;
-  line-height: 50px;
-  background-color: white;
-  border-radius: 50px;
-  margin: 0 auto;
-}
+<style lang="scss" scoped>
+@import "../style/common.scss";
 
-.clearAllBtn {
-  color: #e20303;
-  display: black;
+.filters {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 1rem 1.5rem 1rem;
 }
 </style>

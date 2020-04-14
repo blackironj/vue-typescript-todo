@@ -1,12 +1,24 @@
 <template>
   <section>
-    <transition-group name="list" tag="ul">
-      <li v-for="(todoItem, index) in propsTodos" :key="index" class="shadow">
-        <i class="checkBtn fas fa-check" aria-hidden="true"></i>
-        {{ todoItem.text }}
-        <span class="removeBtn" type="button" @click="removeTodo(index)">
-          <i class="far fa-trash-alt" aria-hidden="true"></i>
-        </span>
+    <transition-group tag="ol" name="list" class="todo-list">
+      <li
+        class="todo-list__item"
+        v-bind:class="{ complete: !todo.status }"
+        v-bind:key="index"
+        v-for="(todo, index) in propsTodos"
+      >
+        <button class="todo-list__item-content" v-on:click="toggleTodo(index)">
+          {{ todo.text }}
+        </button>
+        <button
+          class="btn todo-list__item-remove"
+          v-on:click="removeTodo(index)"
+        >
+          <i
+            class="fa"
+            v-bind:class="[!todo.status ? 'fa-check' : 'fa-times']"
+          ></i>
+        </button>
       </li>
     </transition-group>
   </section>
@@ -23,47 +35,88 @@ export default class TodoList extends Vue {
   private removeTodo(index: number): void {
     this.$emit("removeTodo", index);
   }
+
+  private toggleTodo(index: number): void {
+    this.$emit("toggleTodo", index);
+  }
 }
 </script>
 
-<style scoped>
-ul {
-  list-style-type: none;
-  padding-left: 0px;
-  margin-top: 0;
-  text-align: left;
+<style lang="scss" scoped>
+@import "../style/common.scss";
+
+.todo-list {
+  $block: #{&};
+  width: 100%;
+  padding: 0 1rem;
+  flex: 1;
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+    border-radius: 3px;
+    transition: 200ms;
+    color: $color-main;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    &.complete {
+      color: lightgreen;
+      #{$block}__item-content {
+        &:after {
+          background: lightgreen;
+        }
+      }
+    }
+  }
+  &__item-content {
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: $color-main;
+      transition: 250ms ease-out;
+      transform-origin: center;
+      transform: scalex(0);
+    }
+    &:hover,
+    &:focus {
+      &:after {
+        transform: scalex(1);
+      }
+    }
+  }
+  &__item-remove {
+    margin-left: 0.5em;
+    background: none;
+    border: 1px solid;
+    color: inherit;
+    padding: 0;
+    line-height: 1;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 80%;
+  }
 }
 
-li {
-  display: flex;
-  min-height: 50px;
-  height: 50px;
-  line-height: 50px;
-  margin: 0.5rem 0;
-  padding: 0 0.9rem;
-  background: white;
-  border-radius: 5px;
+.list-move,
+.list-leave-active,
+.list-enter-active {
+  transition: 500ms cubic-bezier(0.87, -0.41, 0.19, 1.44);
 }
-
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
-}
-
 .list-enter,
-.list-leave-to {
+.list-leave-active {
+  transform: translate(100%, 0);
   opacity: 0;
-  transform: translateY(30px);
-}
-
-.checkBtn {
-  line-height: 45px;
-  color: #62acde;
-  margin-right: 5px;
-}
-
-.removeBtn {
-  margin-left: auto;
-  color: #de4343;
 }
 </style>

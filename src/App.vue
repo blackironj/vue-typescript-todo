@@ -1,9 +1,13 @@
 <template>
-  <div id="app">
+  <div class="app" id="app">
     <TodoHeader></TodoHeader>
     <TodoInput v-on:addTodo="addTodo"></TodoInput>
-    <TodoList v-bind:propsTodos="todos" @removeTodo="removeTodo"></TodoList>
-    <TodoFooter v-on:clearAll="clearAll"></TodoFooter>
+    <TodoList
+      v-on:toggleTodo="toggleTodo"
+      v-bind:propsTodos="filteredTodos"
+      @removeTodo="removeTodo"
+    ></TodoList>
+    <TodoFooter v-on:filterTodos="filterTodos"></TodoFooter>
   </div>
 </template>
 
@@ -25,6 +29,7 @@ import TodoStorage, { TodoStatus, TodoStruct } from "./todo";
 })
 export default class App extends Vue {
   private todos: Array<TodoStruct> = [];
+  private visibility = TodoStatus.DEFAULT;
 
   private todoStorage = new TodoStorage();
 
@@ -40,12 +45,21 @@ export default class App extends Vue {
     this.todos.splice(index, 1);
   }
 
-  private clearAll(): void {
-    this.todos = [];
+  private filterTodos(status: TodoStatus): void {
+    this.visibility = status;
   }
 
-  private get(s: TodoStatus): Array<TodoStruct> {
-    switch (s) {
+  private toggleTodo(index: number): void {
+    if (this.todos[index].status === TodoStatus.COMPLETE) {
+      this.todos[index].status = TodoStatus.INCOMPLETE;
+    } else {
+      this.todos[index].status = TodoStatus.COMPLETE;
+    }
+  }
+
+  //computed
+  get filteredTodos(): Array<TodoStruct> {
+    switch (this.visibility) {
       case TodoStatus.COMPLETE:
         return this.todos.filter(t => t.status === TodoStatus.COMPLETE);
       case TodoStatus.INCOMPLETE:
@@ -67,19 +81,26 @@ export default class App extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "./style/common.scss";
+
 body {
-  text-align: center;
-  background-color: #f6f6f8;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-family;
 }
-input {
-  border-style: groove;
-  width: 200px;
-}
-button {
-  border-style: groove;
-}
-.shadow {
-  box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.03);
+
+.app {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 1em;
+  background: #fffsf;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(25, 25, 25, 0.25);
 }
 </style>

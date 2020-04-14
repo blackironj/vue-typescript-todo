@@ -1,15 +1,13 @@
 <template>
   <div class="inputBox shadow">
-    <input
-      type="text"
-      v-model="newTodoItem"
-      placeholder="Type what you have to do"
-      v-on:keyup.enter="addTodo"
-    />
-    <span class="addContainer" v-on:click="addTodo">
-      <i class="addBtn fas fa-plus" aria-hidden="true"></i>
-    </span>
-
+    <form class="form" v-on:submit="addTodo">
+      <input
+        class="input form__input"
+        v-model="newTodoItem"
+        placeholder="Type what you have to do"
+      />
+      <button class="btn form__submit-btn" type="submit">Add</button>
+    </form>
     <modal v-if="showModal" @close="showModal = false">
       <h3 slot="header">Warning</h3>
       <span slot="footer" @click="showModal = false">
@@ -49,29 +47,30 @@ export default class TodoInput extends Vue {
 }
 </script>
 
-<style scoped>
-input:focus {
-  outline: none;
-}
-.inputBox {
-  background: white;
-  height: 50px;
-  line-height: 50px;
-  border-radius: 5px;
-}
-.inputBox input {
-  border-style: none;
-  font-size: 0.9rem;
-}
-.addContainer {
-  float: right;
-  background: linear-gradient(to right, #7d83aa, #7352df);
-  display: block;
-  width: 3rem;
-  border-radius: 0 5px 5px 0;
-}
-.addBtn {
-  color: white;
-  vertical-align: middle;
+<style lang="scss" scoped>
+@import "../style/common.scss";
+
+.form {
+  width: 100%;
+  padding: 1.5rem 1rem 0 1rem;
+  display: flex;
+  &__input {
+    width: 100%;
+    font-size: 14px;
+    margin: 0 0.5em;
+    border-radius: 2em;
+    padding: 0.75em 1.5em;
+    background: none;
+    font-family: $font-family;
+    border: #e3e3e3 1px solid;
+    transition: border 250ms ease-out;
+    &:focus {
+      border: $color-main 1px solid;
+      outline: none;
+    }
+  }
+  &__input,
+  &__submit-btn {
+  }
 }
 </style>
