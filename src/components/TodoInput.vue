@@ -1,6 +1,6 @@
 <template>
   <div class="inputBox shadow">
-    <form class="form" v-on:submit="addTodo">
+    <form class="form" v-on:submit.prevent="addTodo">
       <input
         class="input form__input"
         v-model="newTodoItem"
