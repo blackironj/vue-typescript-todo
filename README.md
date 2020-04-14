@@ -8,11 +8,17 @@ yarn install
 ### Compiles and hot-reloads for development
 ```
 yarn serve
+
+# electron
+yarn electron:serve
 ```
 
 ### Compiles and minifies for production
 ```
 yarn build
+
+# electron
+yarn electron:build
 ```
 
 ### Lints and fixes files
