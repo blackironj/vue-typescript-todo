@@ -1,5 +1,5 @@
 {
-  "name": "test-vue",
+  "name": "vue-typescript-todo",
   "version": "0.1.0",
   "private": true,
   "resolutions": {
@@ -10,8 +10,11 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve"
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
+  "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.4",
     "node-sass": "^4.13.1",
